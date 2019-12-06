@@ -25,7 +25,9 @@ __pycache__/
 
 ### VisualStudioCode ###
 .vscode/*
-*/.vscode/*
+motor/.vscode/*
+pid/.vscode/*
+serv/.vscode/*
 
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
