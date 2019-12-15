@@ -5,33 +5,36 @@ from time import sleep
 #------------------------------------#
 # nazwy i numery pinow jak w mostku
 #------------------------------------#
-def AIN1(): return 13
-def AIN2(): return 19
-def PWMA(): return 26
-def BIN1(): return 21
-def BIN2(): return 20
-def PWMB(): return 16
-def FREQ(): return 50
+AIN1 = 13
+AIN2 = 19
+PWMA = 26
+BIN1 = 21
+BIN2 = 20
+PWMB = 16
+FREQUENCY = 50
+
+STANDARD_PWM1 = 80
+STANDARD_PWM2 = 80
 
 class motors_movement():
-    left_motor = TB6612FNGDc(AIN1(),AIN2(),PWMA(),FREQ())
-    right_motor = TB6612FNGDc(BIN1(),BIN2(),PWMB(),FREQ())
+    left_motor = TB6612FNGDc(AIN1, AIN2, PWMA, FREQUENCY)
+    right_motor = TB6612FNGDc(BIN1, BIN2, PWMB, FREQUENCY)
     
-    def move_forth(self,pwm1=30, pwm2=30):
+    def move_forth(self,pwm1=STANDARD_PWM1, pwm2=STANDARD_PWM2):
         self.left_motor.forward(pwm1)
-        self.right_motor.forward(pwm1)
+        self.right_motor.forward(pwm2)
 
-    def move_back(self,pwm1=30, pwm2=30):
+    def move_back(self,pwm1=STANDARD_PWM1, pwm2=STANDARD_PWM2):
         self.left_motor.backward(pwm1)
-        self.right_motor.backward(pwm1)
+        self.right_motor.backward(pwm2)
 
-    def turn_left(self,pwm1=30, pwm2=30):
+    def turn_left(self,pwm1=STANDARD_PWM1, pwm2=STANDARD_PWM2):
         self.left_motor.backward(pwm1)
-        self.right_motor.forward(pwm1)
+        self.right_motor.forward(pwm2)
 
-    def turn_right(self,pwm1=30, pwm2=30):
+    def turn_right(self,pwm1=STANDARD_PWM1, pwm2=STANDARD_PWM2):
         self.left_motor.forward(pwm1)
-        self.right_motor.backward(pwm1)
+        self.right_motor.backward(pwm2)
 
     def stop(self):
         self.left_motor.stop()

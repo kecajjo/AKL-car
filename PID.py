@@ -30,6 +30,9 @@ More information about PID Controller: http://en.wikipedia.org/wiki/PID_controll
 """
 import time
 
+MAX_PWM = 100
+# MAX_MOTOR_SPEED = 300
+
 class PID:
     """PID Controller
     """
@@ -127,3 +130,12 @@ class PID:
         Based on a pre-determined sampe time, the PID decides if it should compute or return immediately.
         """
         self.sample_time = sample_time
+
+    def count_motor_pwm(self, speed1, speed2):
+        self.SetPoint = speed1
+        feedback_value = speed2
+        self.update(feedback_value)
+        pwm = (feedback_value+self.output)*MAX_PWM/(2*speed1) # assuming 2*speed1 is max speed possible
+        if pwm > 100:
+            pwm = 100
+        return pwm
