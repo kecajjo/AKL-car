@@ -3,22 +3,16 @@
 from time import sleep
 from motors_movement import *
 from servo import *
-import PID
-import Encoder
 from constant_values import *
 
 
 motor = motors_movement()
 gimbal = servo()
-encoder1 = Encoder.Encoder(ENCODER1_A_PIN, ENCODER1_B_PIN)
-encoder2 = Encoder.Encoder(ENCODER2_A_PIN, ENCODER2_B_PIN)
 
 
 def start_sending_orders(orders):
     target = 0
-    prev_target = 0
     pwm1 = STANDARD_PWM1
-    pid = PID.PID(P=0.8, I=0.0, D=0.0)
     while 1:
         if not orders.empty():
             try:
