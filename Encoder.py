@@ -3,9 +3,11 @@ from time import time, sleep
 from constant_values import *
 
 
-# --------------------------------------- #
-# this way they will be well synchronized #
-# --------------------------------------- #
+# pin numbers
+ENCODER1_A_PIN = 23
+ENCODER1_B_PIN = 24
+ENCODER2_A_PIN = 27
+ENCODER2_B_PIN = 17
 
 
 class Encoder:

@@ -3,22 +3,23 @@
 from time import sleep
 from motors_movement import *
 from servo import *
-import PID
-import Encoder
+from PID import *
+from Encoder import *
 from constant_values import *
 
 
 motor = motors_movement()
 gimbal = servo()
-encoder1 = Encoder.Encoder(ENCODER1_A_PIN, ENCODER1_B_PIN)
-encoder2 = Encoder.Encoder(ENCODER2_A_PIN, ENCODER2_B_PIN)
+encoder1 = Encoder(ENCODER1_A_PIN, ENCODER1_B_PIN)
+encoder2 = Encoder(ENCODER2_A_PIN, ENCODER2_B_PIN)
 
 
 def start_sending_orders(orders):
     target = 0
     prev_target = 0
     pwm1 = STANDARD_PWM1
-    pid = PID.PID(P=0.8, I=0.0, D=0.0)
+    pid = PID(P=0.8, I=0.0, D=0.0)
+    pid.setSampleTime(SAMPLE_TIME)
     while 1:
         if not orders.empty():
             try:
@@ -57,4 +58,5 @@ def start_sending_orders(orders):
                     motor.stop()
                 prev_target = target # changing prev_target only if target affects motors
             except:
-                print("smthin fcked up")            
+                print("smthin fcked up")
+        sleep(0.001) # not sure if it should be there            

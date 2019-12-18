@@ -21,8 +21,3 @@ master = 100
 
 port = 7012
 
-# pin numbers
-ENCODER1_A_PIN = 23
-ENCODER1_B_PIN = 24
-ENCODER2_A_PIN = 27
-ENCODER2_B_PIN = 17

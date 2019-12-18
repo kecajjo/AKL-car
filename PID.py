@@ -31,6 +31,7 @@ More information about PID Controller: http://en.wikipedia.org/wiki/PID_controll
 import time
 
 MAX_PWM = 100
+SAMPLE_TIME = 0.5
 # MAX_MOTOR_SPEED = 300
 
 class PID:
