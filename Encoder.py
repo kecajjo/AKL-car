@@ -37,25 +37,28 @@ class Encoder:
         dt_state = GPIO.input(self.dt)
         if clk_state != self.rotaryLastState:
             self.rotaryLastState = clk_state
-            if dt_state != clk_state:
-                current_time = time()
-                if self.prev_time is not None:
-                    self.speed = 60/(current_time-self.prev_time)
-                    # revolutions per minute assuming 1 tick per revolution
-                    print(self.speed)
-                self.prev_time = current_time
-                # self.counter += 1
-                # print (self.counter)
-            else:
-                current_time = time()
-                if self.prev_time is not None:
-                    self.speed = -60/(current_time-self.prev_time)
-                    # revolutions per minute assuming 1 tick per revolution
-                    # minus because moving backward
-                    print(self.speed)
-                self.prev_time = current_time
-                # self.counter -= 1
-                # print(self.counter)
+             # will count time once per revolution not twice
+             # to be checked
+            if clk_state == 1:
+                if dt_state != clk_state:
+                    current_time = time()
+                    if self.prev_time is not None:
+                        self.speed = 60/(current_time-self.prev_time)
+                        # revolutions per minute assuming 1 tick per revolution
+                        print(self.speed)
+                    self.prev_time = current_time
+                    # self.counter += 1
+                    # print (self.counter)
+                else:
+                    current_time = time()
+                    if self.prev_time is not None:
+                        self.speed = -60/(current_time-self.prev_time)
+                        # revolutions per minute assuming 1 tick per revolution
+                        # minus because moving backward
+                        print(self.speed)
+                    self.prev_time = current_time
+                    # self.counter -= 1
+                    # print(self.counter)
 
 
 
