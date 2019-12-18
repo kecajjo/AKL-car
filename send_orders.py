@@ -13,6 +13,7 @@ gimbal = servo()
 def start_sending_orders(orders):
     target = 0
     pwm1 = STANDARD_PWM1
+    pwm2 = STANDARD_PWM2
     while 1:
         if not orders.empty():
             try:
@@ -24,7 +25,7 @@ def start_sending_orders(orders):
                     gimbal.move_down()
                     print("gimbal moving down")
             except:
-                print("smthin fcked up")
+                print("smthin fcked up", target)
             if (target > 1 and target < 6) or target == 10:
                 try:
                     if target == 2:
@@ -38,5 +39,5 @@ def start_sending_orders(orders):
                     if target == 10:
                         motor.stop()
                 except:
-                    print("smthin fcked up")
+                    print("smthin fcked up2", target)
         sleep(0.01)            
