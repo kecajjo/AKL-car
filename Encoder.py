@@ -3,10 +3,6 @@ from time import time, sleep
 from constant_values import *
 
 
-# --------------------------------------- #
-# this way they will be well synchronized #
-# --------------------------------------- #
-
 
 class Encoder:
 
