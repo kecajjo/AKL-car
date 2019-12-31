@@ -32,18 +32,18 @@ class Measurement(object):
         self.gpio_mode = gpio_mode
         self.pi = math.pi
         self.median_reading = 0
-        self.first_impuls = True
-        self.sonar_signal_off = 0
-        self.sonar_signal_on = 0
-        self.distance_time = 0
+        self.distance_cm = 0
+        self.signal_off = 0
+        self.signal_on = 0
         self.speed_of_sound = 331.3 * math.sqrt(1 + (self.temperature / 273.15))
+        self.sample = []
 
         # setup input/output pins
         GPIO.setwarnings(False)
         GPIO.setmode(self.gpio_mode)
         GPIO.setup(self.trig_pin, GPIO.OUT)
         GPIO.setup(self.echo_pin, GPIO.IN)
-        GPIO.add_event_detect(self.echo_pin, GPIO.BOTH, callback = self.my_event)
+        GPIO.add_event_detect(self.echo_pin, GPIO.BOTH, callback = self.detect_edge)
 
     def raw_distance(self, sample_size=11, sample_wait=0.1):
         # Return an error corrected unrounded distance, in cm, of an object
@@ -72,70 +72,12 @@ class Measurement(object):
 
         speed_of_sound = 331.3 * math.sqrt(1 + (self.temperature / 273.15))
         sample = []
-        sonar_signal_off = 0
-        sonar_signal_on = 0
-        missed_pulse = False
-
-        # for distance_reading in range(sample_size):
-        #     GPIO.output(self.trig_pin, GPIO.LOW)
-        #     time.sleep(sample_wait)
-        #     GPIO.output(self.trig_pin, True)
-        #     time.sleep(0.00001)
-        #     GPIO.output(self.trig_pin, False)
-        #     echo_status_counter = 1
-        #     while GPIO.input(self.echo_pin) == 0 and echo_status_counter<1001:
-        #         if echo_status_counter < 1000:
-        #             sonar_signal_off = time.time()
-        #             echo_status_counter += 1
-        #         else:
-        #             print("Echo pulse was not received")
-        #             missed_pulse = True
-        #             break
-        #     while GPIO.input(self.echo_pin) == 1:
-        #         sonar_signal_on = time.time()
-        #         if missed_pulse == True:
-        #             break
-        #     if missed_pulse == False:
-        #         time_passed = sonar_signal_on - sonar_signal_off
-        #         distance_cm = time_passed * ((speed_of_sound * 100) / 2)
-        #         sample.append(distance_cm)
-        #     else:
-        #         missed_pulse == False
-        #        # out of range or other error
-        #        sample.append(99999999)
-
-
-####################################################################3
-        GPIO.output(self.trig_pin, GPIO.LOW)
-        time.sleep(sample_wait)
-        GPIO.output(self.trig_pin, True)
-        time.sleep(0.00001)
-        GPIO.output(self.trig_pin, False)
-        # GPIO.add_event_detect(self.echo_pin, GPIO.BOTH)
-        # GPIO.add_event_detect(self.echo_pin, GPIO.BOTH, callback = self.my_event)
 
         GPIO.output(self.trig_pin, GPIO.LOW)
         time.sleep(sample_wait)
         GPIO.output(self.trig_pin, True)
         time.sleep(0.00001)
         GPIO.output(self.trig_pin, False)
-
-        # GPIO.add_event_callback(self.echo_pin, self.rising)
-        # GPIO.add_event_callback(self.echo_pin, self.falling)
-        # time_passed = self.sonar_signal_on - self.sonar_signal_off
-        # distance_cm = time_passed * ((speed_of_sound * 100) / 2)
-
-        # self.median_reading = distance_cm
-
-
-
-        # sorted_sample = sorted(sample)
-        # self.median_reading = sorted_sample[sample_size // 2]
-        # for distance_reading in range(sample_size):
-        #     print(sample[distance_reading])
-        # if self.median_reading > 100:
-        #     for distance_reading in range(sample_size):
-        #         print(sample[distance_reading])
 
     def distance(self):
         # Calculate the distance from the sensor to an object.
@@ -145,32 +87,19 @@ class Measurement(object):
         else:
             # don't need this method if using metric. Use raw_distance
             # instead.  But it will return median_reading anyway if used.
+            self.median_reading = self.distance_cm
             return self.median_reading
 
-    def my_event(self, channel):
-        if self.first_impuls == True:
-            self.sonar_signal_off = time.time()
-            self.first_impuls = False
+    def detect_edge(self,channel):
+        if GPIO.input(self.echo_pin) == 1:
+            self.signal_on = time.time()
         else:
-            self.sonar_signal_on = time.time()
-            self.distance_time = self.sonar_signal_on - self.sonar_signal_off
-            distance_cm = self.distance_time * ((self.speed_of_sound * 100) / 2)
-            self.median_reading = distance_cm
-            if self.distance_time > 0.8:
-                self.sonar_signal_off = self.sonar_signal_on
-                self.first_impuls = False
-            else:
-                self.first_impuls = True
-                print('Distance: {:.1f} cm' .format(self.median_reading))
-
-    def rising(self, channel):
-        print("rise")
-        self.sonar_signal_off = time.time()
-
-    def falling(self, channel):
-        print("fall")
-        self.sonar_signal_on = time.time()
-
+            self.signal_off = time.time()
+            signal_duration = self.signal_off - self.signal_on
+            if signal_duration < 0.04:
+                self.distance_cm = signal_duration * ((self.speed_of_sound * 100) / 2)
+                # print('Distance: {:.1f}cm' .format(self.distance_cm))
+                self.sample.append(self.distance_cm)
 
     @staticmethod
     def basic_distance(trig_pin, echo_pin, celsius=20):
@@ -204,12 +133,89 @@ class Measurement(object):
 
 if __name__ == "__main__":
     hcsr04 = Measurement(TRIG_PIN, ECHO_PIN)
+    sample9 = []
+    tmp9 = []
+    sample7 = []
+    tmp7 = []
+    sample5 = []
+    tmp5 = []
+    sample3 = []
+    tmp3 = []
+    nine_samples = open("nine_samples.txt", "w")
+    seven_samples = open("seven_samples.txt", "w")
+    five_samples = open("five_samples.txt", "w")
+    three_samples = open("three_samples.txt", "w")
+
     # how_far = hcsr04.distance()
     # time.sleep(120)
     # GPIO.cleanup()
     try:
         while(True):
+            # for i in range(9):
+            #     how_far = hcsr04.distance()
+            # hcsr04.sample.sort()
+            # size_hcsr04_sample = len(hcsr04.sample)
+            # sample.append(hcsr04.sample[size_hcsr04_sample//2])
+            # hcsr04.sample.clear()
+            ###############################
             how_far = hcsr04.distance()
-            # time.sleep(5)
+
+
     except KeyboardInterrupt:
+        size_all_samples = len(hcsr04.sample)
+        for i in range(size_all_samples):
+            tmp3.append(hcsr04.sample[i])
+            if 2 == i%3:
+                size3 = len(tmp3)
+                tmp3.sort()
+                sample3.append(tmp3[size3//2])
+                tmp3.clear()
+            tmp5.append(hcsr04.sample[i])
+            if 4 == i%5:
+                size5 = len(tmp5)
+                tmp5.sort()
+                sample5.append(tmp5[size5//2])
+                tmp5.clear()            
+            tmp7.append(hcsr04.sample[i])
+            if 6 == i%7:
+                size7 = len(tmp7)
+                tmp7.sort()
+                sample7.append(tmp7[size7//2])
+                tmp7.clear()
+            tmp9.append(hcsr04.sample[i])
+            if 8 == i%9:
+                size9 = len(tmp9)
+                tmp9.sort()
+                sample9.append(tmp9[size9//2])
+                tmp9.clear()
+        sample3.sort()
+        size3 = len(sample3)
+        for i in range(size3):
+            three_samples.write('Distance: {:.1f}cm\n' .format(sample3[i]))
+        three_samples.write('5%: {:.1f}cm\nQuartile: {:.1f}cm\nMedian: {:.1f}cm\nThird quartile: {:.1f}cm\n95%: {:.1f}cm' .format(sample3[size3//20], sample3[size3//4], sample3[size3//2], sample3[size3*3//4], sample3[size3*19//20]))
+        three_samples.close()
+        sample5.sort()
+        size5 = len(sample5)
+        for i in range(size5):
+            five_samples.write('Distance: {:.1f}cm\n' .format(sample5[i]))
+        five_samples.write('5%: {:.1f}cm\nQuartile: {:.1f}cm\nMedian: {:.1f}cm\nThird quartile: {:.1f}cm\n95%: {:.1f}cm' .format(sample5[size5//20], sample5[size5//4], sample5[size5//2], sample5[size5*3//4], sample5[size5*19//20]))
+        five_samples.close()
+        sample7.sort()
+        size7 = len(sample7)
+        for i in range(size7):
+            seven_samples.write('Distance: {:.1f}cm\n' .format(sample7[i]))
+        seven_samples.write('5%: {:.1f}cm\nQuartile: {:.1f}cm\nMedian: {:.1f}cm\nThird quartile: {:.1f}cm\n95%: {:.1f}cm' .format(sample7[size7//20], sample7[size7//4], sample7[size7//2], sample7[size7*3//4], sample7[size7*19//20]))
+        seven_samples.close()
+        sample9.sort()
+        size9 = len(sample9)
+        for i in range(size9):
+            nine_samples.write('Distance: {:.1f}cm\n' .format(sample9[i]))
+        nine_samples.write('5%: {:.1f}cm\nQuartile: {:.1f}cm\nMedian: {:.1f}cm\nThird quartile: {:.1f}cm\n95%: {:.1f}cm' .format(sample9[size9//20], sample9[size9//4], sample9[size9//2], sample9[size9*3//4], sample9[size9*19//20]))
+        nine_samples.close()
+        #######################
+        # sample.sort()
+        # size = len(sample)
+        # for i in range(size):
+        #     print('Distance: {:.1f}cm' .format(sample[i]))
+        # print('5%: {:.1f}cm\nQuartile: {:.1f}cm\nMedian: {:.1f}cm\nThird quartile: {:.1f}cm\n95%: {:.1f}cm' .format(sample[size//20], sample[size//4], sample[size//2], sample[size*3//4], sample[size*19//20]))
         GPIO.cleanup()
