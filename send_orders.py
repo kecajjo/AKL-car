@@ -6,13 +6,15 @@ from servo import *
 from PID import *
 from Encoder import *
 from constant_values import *
+from grove_ultrasonic import *
+
 
 
 motor = motors_movement()
 gimbal = servo()
 encoder1 = Encoder(ENCODER1_A_PIN, ENCODER1_B_PIN)
 encoder2 = Encoder(ENCODER2_A_PIN, ENCODER2_B_PIN)
-
+distance_grove = Measurement()
 
 
 def start_sending_orders(orders):
@@ -62,6 +64,14 @@ def start_sending_orders(orders):
                 prev_target = target # changing prev_target only if target affects motors
             except:
                 print("\n\nsmthin fcked up\n\n")
+
+        distance_grove.distance()
+        print('distance: {:3f}' .format(distance_grove.distance_cm))
+        if target == 4 and distance_grove.distance_cm < COLLISION_DISTANCE:
+            motor.stop()
+            target = 10
+            prev_target = 10
+            print("STOPPED IN CASE OF COLLISION")
         sleep(0.001) # not sure if it should be there    
 
 def print_order(target):

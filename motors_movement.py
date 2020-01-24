@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 from RpiMotorLib.rpi_dc_lib import TB6612FNGDc
 from time import sleep
+from constant_values import *
 
 #------------------------------------#
 # nazwy i numery pinow jak w mostku
@@ -48,4 +49,6 @@ def test():
     sleep(2)
     motors.stop()
     motors.pin_cleanup()
-#test()
+
+if __name__ == "__main__":
+    test()

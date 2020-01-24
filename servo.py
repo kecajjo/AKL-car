@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-
+from constant_values import *
 
 class servo:
     def __init__(self):
