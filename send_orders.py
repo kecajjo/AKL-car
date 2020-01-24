@@ -4,16 +4,20 @@ from time import sleep
 from motors_movement import *
 from servo import *
 from constant_values import *
+from grove_ultrasonic import *
+
+COLLISION_DISTANCE = 15
 
 
 motor = motors_movement()
 gimbal = servo()
-
+distance_grove = Measurement()
 
 def start_sending_orders(orders):
     target = 0
     pwm1 = STANDARD_PWM1
     pwm2 = STANDARD_PWM2
+    print('ok')
     while 1:
         if not orders.empty():
             try:
@@ -39,6 +43,11 @@ def start_sending_orders(orders):
                         motor.stop()
                 except:
                     print("smthin fcked up2", target)
+        distance_grove.distance()
+        print('distance: {:3f}' .format(distance_grove.distance_cm))
+        if target == 4 and distance_grove.distance_cm < COLLISION_DISTANCE:
+            motor.stop()
+            print("STOPPED IN CASE OF COLLISION")
         sleep(0.01)
 
 def print_order(target):

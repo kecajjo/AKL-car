@@ -57,4 +57,6 @@ def test():
     sleep(2)
     motors.stop()
     motors.pin_cleanup()
-#test()
+
+if __name__ == "__main__":
+    test()
