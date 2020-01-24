@@ -12,8 +12,7 @@ import RPi.GPIO as GPIO
 import numpy as np
 import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
-
-TRIG_PIN = 15
+from constant_values import *
 
 
 

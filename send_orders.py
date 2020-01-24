@@ -6,7 +6,6 @@ from servo import *
 from constant_values import *
 from grove_ultrasonic import *
 
-COLLISION_DISTANCE = 15
 
 
 motor = motors_movement()

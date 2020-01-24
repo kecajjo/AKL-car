@@ -1,20 +1,12 @@
 import RPi.GPIO as GPIO
 from RpiMotorLib.rpi_dc_lib import TB6612FNGDc
 from time import sleep
+from constant_values import *
 
 #------------------------------------#
 # nazwy i numery pinow jak w mostku
 #------------------------------------#
-AIN1 = 13
-AIN2 = 19
-PWMA = 26
-BIN1 = 21
-BIN2 = 20
-PWMB = 16
-FREQUENCY = 50
 
-STANDARD_PWM1 = 80
-STANDARD_PWM2 = 80
 
 class motors_movement():
     left_motor = TB6612FNGDc(AIN1, AIN2, PWMA, FREQUENCY)
