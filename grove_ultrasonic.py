@@ -13,8 +13,6 @@ import numpy as np
 import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
 
-TRIG_PIN = 21
-
 
 
 class Measurement(object):

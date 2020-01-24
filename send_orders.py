@@ -14,6 +14,7 @@ encoder1 = Encoder(ENCODER1_A_PIN, ENCODER1_B_PIN)
 encoder2 = Encoder(ENCODER2_A_PIN, ENCODER2_B_PIN)
 
 
+
 def start_sending_orders(orders):
     target = 0
     prev_target = 0

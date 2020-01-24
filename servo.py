@@ -2,12 +2,6 @@ import RPi.GPIO as GPIO
 import time
 
 
-MAX_PWM = 9
-MIN_PWM = 3
-FREQ = 50
-SINGLE_POS_CHANGE = 10
-SERVO_PIN = 4
-
 class servo:
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
