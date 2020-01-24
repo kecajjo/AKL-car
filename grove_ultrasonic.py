@@ -80,15 +80,26 @@ class Measurement(object):
         time.sleep(0.00001)
         GPIO.output(self.trig_pin, False)
         self.signal_on = time.time()
+        signal_sent = self.signal_on
         GPIO.setup(self.trig_pin, GPIO.IN)
         # add event detect is too slow and misses the signal sent and returned
         # GPIO.add_event_detect(self.trig_pin, GPIO.BOTH, callback = self.detect_edge)
         while GPIO.input(self.trig_pin) == 0:
             self.signal_on = time.time()
-
+            if self.signal_on - signal_sent > 0.1:
+                self.signal_on = None
+                break
         while GPIO.input(self.trig_pin) == 1:
             self.signal_off = time.time()
-        signal_duration = self.signal_off - self.signal_on
+            if self.signal_off - signal_sent > 0.1:
+                self.signal_off = None
+                break
+        if self.signal_on is not None and self.signal_off is not None:
+            signal_duration = self.signal_off - self.signal_on
+            self.distance_cm = signal_duration * ((self.speed_of_sound * 100) / 2)
+            print('Distance: {:.1f}cm' .format(self.distance_cm))
+        else:
+            self.distance_cm = 999
 
         # lowpass filter version
         # if signal_duration < 0.04:
@@ -97,9 +108,8 @@ class Measurement(object):
         #     self.sample.append(self.distance_cm)
 
         # no lowpass filter version
-        self.distance_cm = signal_duration * ((self.speed_of_sound * 100) / 2)
-        print('Distance: {:.1f}cm' .format(self.distance_cm))
-        self.sample.append(self.distance_cm)
+
+        # self.sample.append(self.distance_cm)
 
 
     def distance(self):
