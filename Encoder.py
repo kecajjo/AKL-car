@@ -40,19 +40,19 @@ class Encoder:
             if dt_state != clk_state:
                 current_time = time()
                 if self.prev_time is not None:
-                    self.speed = 60/(current_time-self.prev_time)
                     # revolutions per minute assuming 1 tick per revolution
-                    print(self.speed)
+                    self.speed = 60/(current_time-self.prev_time)
+                    # print('{:3f}' .format(self.speed))
                 self.prev_time = current_time
                 # self.counter += 1
                 # print (self.counter)
             else:
                 current_time = time()
                 if self.prev_time is not None:
-                    self.speed = -60/(current_time-self.prev_time)
                     # revolutions per minute assuming 1 tick per revolution
                     # minus because moving backward
-                    print(self.speed)
+                    self.speed = -60/(current_time-self.prev_time)
+                    # print('{:3f}'.format(self.speed))
                 self.prev_time = current_time
                 # self.counter -= 1
                 # print(self.counter)

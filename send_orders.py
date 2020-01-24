@@ -24,21 +24,23 @@ def start_sending_orders(orders):
         if not orders.empty():
             try:
                 target, value2, value3 = orders.get()
+                print_order(target)
                 if target == 6:
                     gimbal.move_up()
-                    print("gimbal moving up")
                 if target == 7:
                     gimbal.move_down()
-                    print("gimbal moving down")
             except:
-                print("smthin fcked up")
+                print("\n\nsmthin fcked up\n\n")
         if (target > 1 and target < 6) or target == 10:
             try:
                 if target == prev_target:
                     if encoder1.speed is not None and encoder2.speed is not None:
+                        print('speed1: {:3f}\t'.format(encoder1.speed))
+                        print('speed2: {:3f}\t'.format(encoder2.speed))
                         speed_abs1 = abs(encoder1.speed)
                         speed_abs2 = abs(encoder2.speed)
                         pwm2 = pid.count_motor_pwm(speed_abs1,speed_abs2)
+                        print('pwm2 from PID: {:3f}\t'.format(pwm2))
                 else:
                     pid.clear() # clearing pid after changing order
                     encoder1.clear() # same goes for encoders
@@ -58,5 +60,23 @@ def start_sending_orders(orders):
                     motor.stop()
                 prev_target = target # changing prev_target only if target affects motors
             except:
-                print("smthin fcked up")
-        sleep(0.001) # not sure if it should be there            
+                print("\n\nsmthin fcked up\n\n")
+        sleep(0.001) # not sure if it should be there    
+
+def print_order(target):
+    if target == 6:
+        print("\ngimbal moving up\n")
+    elif target == 7:
+        print("\ngimbal moving down\n")
+    elif target == 2:
+        print("\nturning right\n")
+    elif target == 3:
+        print("\nturning left\n")
+    elif target == 4:
+        print("\nmoving forward\n")
+    elif target == 5:
+        print("\nmoving back\n")
+    elif target == 10:
+        print("\nstop\n")
+    else:
+        print("\n\nUNKNOWN COMMAND\n\n")
