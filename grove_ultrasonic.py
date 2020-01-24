@@ -12,6 +12,7 @@ import RPi.GPIO as GPIO
 import numpy as np
 import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
+from constant_values import *
 
 
 
@@ -24,7 +25,7 @@ class Measurement(object):
 
 
     def __init__(
-        self, trig_pin, temperature=20, unit="metric", gpio_mode=GPIO.BCM
+        self, trig_pin = TRIG_PIN, temperature=20, unit="metric", gpio_mode=GPIO.BCM
     ):
         self.trig_pin = trig_pin
         self.temperature = temperature
@@ -100,7 +101,6 @@ class Measurement(object):
             print('Distance: {:.1f}cm' .format(self.distance_cm))
         else:
             self.distance_cm = 999
-
         # lowpass filter version
         # if signal_duration < 0.04:
         #     self.distance_cm = signal_duration * ((self.speed_of_sound * 100) / 2)
@@ -108,6 +108,7 @@ class Measurement(object):
         #     self.sample.append(self.distance_cm)
 
         # no lowpass filter version
+
 
         # self.sample.append(self.distance_cm)
 
@@ -123,47 +124,47 @@ class Measurement(object):
             self.median_reading = self.distance_cm
             return self.median_reading
 
-    def detect_edge(self,channel):
-        # print("detected edge")
-        if GPIO.input(self.trig_pin) == 1:
-            self.signal_on = time.time()
-        else:
-            self.signal_off = time.time()
-            signal_duration = self.signal_off - self.signal_on
-            if signal_duration < 0.04:
-                self.distance_cm = signal_duration * ((self.speed_of_sound * 100) / 2)
-                # print('Distance: {:.1f}cm' .format(self.distance_cm))
-                self.sample.append(self.distance_cm)
+    # def detect_edge(self,channel):
+    #     # print("detected edge")
+    #     if GPIO.input(self.trig_pin) == 1:
+    #         self.signal_on = time.time()
+    #     else:
+    #         self.signal_off = time.time()
+    #         signal_duration = self.signal_off - self.signal_on
+    #         if signal_duration < 0.04:
+    #             self.distance_cm = signal_duration * ((self.speed_of_sound * 100) / 2)
+    #             # print('Distance: {:.1f}cm' .format(self.distance_cm))
+    #             self.sample.append(self.distance_cm)
 
-    @staticmethod
-    def basic_distance(trig_pin, echo_pin, celsius=20):
-        # Return an unformatted distance in cm's as read directly from
-        # RPi.GPIO.
-        # currently not working
+    # @staticmethod
+    # def basic_distance(trig_pin, echo_pin, celsius=20):
+    #     # Return an unformatted distance in cm's as read directly from
+    #     # RPi.GPIO.
+    #     # currently not working
 
-        sonar_signal_off = 0
-        sonar_signal_on = 0
+    #     sonar_signal_off = 0
+    #     sonar_signal_on = 0
 
-        speed_of_sound = 331.3 * math.sqrt(1 + (celsius / 273.15))
-        GPIO.setup(trig_pin, GPIO.OUT)
-        GPIO.setup(echo_pin, GPIO.IN)
-        GPIO.output(trig_pin, GPIO.LOW)
-        time.sleep(0.1)
-        GPIO.output(trig_pin, True)
-        time.sleep(0.00001)
-        GPIO.output(trig_pin, False)
-        echo_status_counter = 1
-        while GPIO.input(echo_pin) == 0:
-            if echo_status_counter < 1000:
-                sonar_signal_off = time.time()
-                echo_status_counter += 1
-            else:
-                raise SystemError("Echo pulse was not received")
-        while GPIO.input(echo_pin) == 1:
-            sonar_signal_on = time.time()
+    #     speed_of_sound = 331.3 * math.sqrt(1 + (celsius / 273.15))
+    #     GPIO.setup(trig_pin, GPIO.OUT)
+    #     GPIO.setup(echo_pin, GPIO.IN)
+    #     GPIO.output(trig_pin, GPIO.LOW)
+    #     time.sleep(0.1)
+    #     GPIO.output(trig_pin, True)
+    #     time.sleep(0.00001)
+    #     GPIO.output(trig_pin, False)
+    #     echo_status_counter = 1
+    #     while GPIO.input(echo_pin) == 0:
+    #         if echo_status_counter < 1000:
+    #             sonar_signal_off = time.time()
+    #             echo_status_counter += 1
+    #         else:
+    #             raise SystemError("Echo pulse was not received")
+    #     while GPIO.input(echo_pin) == 1:
+    #         sonar_signal_on = time.time()
 
-        time_passed = sonar_signal_on - sonar_signal_off
-        return time_passed * ((speed_of_sound * 100) / 2)
+    #     time_passed = sonar_signal_on - sonar_signal_off
+    #     return time_passed * ((speed_of_sound * 100) / 2)
 
 
 if __name__ == "__main__":
@@ -198,6 +199,11 @@ if __name__ == "__main__":
 
 
     except KeyboardInterrupt:
+        ##########################################
+        # uncomment end of raw distance function #
+        # for sample[] to be made                #
+        ##########################################
+
         GPIO.cleanup()
         size_all_samples = len(grove.sample)
         for i in range(size_all_samples):
