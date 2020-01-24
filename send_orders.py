@@ -30,12 +30,16 @@ def start_sending_orders(orders):
                 try:
                     if target == 2:
                         motor.turn_right(pwm1,pwm2)
+                        print("turning right")
                     if target == 3:
                         motor.turn_left(pwm1,pwm2)
+                        print("turning left")
                     if target == 4:
                         motor.move_forth(pwm1,pwm2)
+                        print("moving forward")
                     if target == 5:
                         motor.move_back(pwm1,pwm2)
+                        print("moving back")
                     if target == 10:
                         motor.stop()
                 except:
