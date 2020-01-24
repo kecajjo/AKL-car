@@ -16,7 +16,6 @@ def start_sending_orders(orders):
     target = 0
     pwm1 = STANDARD_PWM1
     pwm2 = STANDARD_PWM2
-    print('ok')
     while 1:
         if not orders.empty():
             try:
