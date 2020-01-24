@@ -190,6 +190,7 @@ if __name__ == "__main__":
 
 
     except KeyboardInterrupt:
+        GPIO.cleanup()
         size_all_samples = len(grove.sample)
         for i in range(size_all_samples):
             tmp3.append(grove.sample[i])
@@ -273,4 +274,3 @@ if __name__ == "__main__":
         # for i in range(size):
         #     print('Distance: {:.1f}cm' .format(sample[i]))
         # print('5%: {:.1f}cm\nQuartile: {:.1f}cm\nMedian: {:.1f}cm\nThird quartile: {:.1f}cm\n95%: {:.1f}cm' .format(sample[size//20], sample[size//4], sample[size//2], sample[size*3//4], sample[size*19//20]))
-        GPIO.cleanup()
