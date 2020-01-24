@@ -18,6 +18,7 @@ def start_sending_orders(orders):
         if not orders.empty():
             try:
                 target, value2, value3 = orders.get()
+                print_order(target)
                 if target == 6:
                     gimbal.move_up()
                 if target == 7:
@@ -38,4 +39,22 @@ def start_sending_orders(orders):
                         motor.stop()
                 except:
                     print("smthin fcked up2", target)
-        sleep(0.01)            
+        sleep(0.01)
+
+def print_order(target):
+    if target == 6:
+        print("\ngimbal moving up\n")
+    elif target == 7:
+        print("\ngimbal moving down\n")
+    elif target == 2:
+        print("\nturning right\n")
+    elif target == 3:
+        print("\nturning left\n")
+    elif target == 4:
+        print("\nmoving forward\n")
+    elif target == 5:
+        print("\nmoving back\n")
+    elif target == 10:
+        print("\nstop\n")
+    else:
+        print("\n\nUNKNOWN COMMAND\n\n")  
