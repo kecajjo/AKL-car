@@ -12,8 +12,8 @@ from grove_ultrasonic import *
 
 motor = motors_movement()
 gimbal = servo()
-encoder1 = Encoder(ENCODER1_A_PIN, ENCODER1_B_PIN)
-encoder2 = Encoder(ENCODER2_A_PIN, ENCODER2_B_PIN)
+encoder1 = Encoder(ENCODER1_PIN)
+encoder2 = Encoder(ENCODER2_PIN)
 distance_grove = Measurement()
 
 
@@ -21,7 +21,7 @@ def start_sending_orders(orders):
     target = 0
     prev_target = 0
     pwm1 = STANDARD_PWM1
-    pid = PID(P=0.8, I=0.0, D=0.0)
+    pid = PID(P=0.2, I=0.0, D=0.0)
     pid.setSampleTime(SAMPLE_TIME)
     while 1:
         if not orders.empty():
@@ -33,24 +33,32 @@ def start_sending_orders(orders):
                 if target == 7:
                     gimbal.move_down()
             except:
-                print("\n\nsmthin fcked up\n\n")
+                print("\n\nsmthin fcked up \t send_orders \t error: 1\n\n")
         if (target > 1 and target < 6) or target == 10:
-            try:
-                if target == prev_target:
-                    if encoder1.speed is not None and encoder2.speed is not None:
-                        print('speed1: {:3f}\t'.format(encoder1.speed))
-                        print('speed2: {:3f}\t'.format(encoder2.speed))
-                        speed_abs1 = abs(encoder1.speed)
-                        speed_abs2 = abs(encoder2.speed)
+    
+            if target == prev_target:
+                try:
+                    print('speed1: {:3f}'.format(encoder1.speed), end='\t')
+                    print('speed2: {:3f}'.format(encoder2.speed), end='\t')
+                    speed_abs1 = abs(encoder1.speed)
+                    speed_abs2 = abs(encoder2.speed)
+                    if speed_abs1 != 0:
                         pwm2 = pid.count_motor_pwm(speed_abs1,speed_abs2)
-                        print('pwm2 from PID: {:3f}\t'.format(pwm2))
-                else:
+                    else:
+                        pwm2 = 0
+                    print('pwm2 from PID: {:3f}\t'.format(pwm2))
+                except:
+                    print("\n\nsmthin fcked up \t send_orders \t error: 2.1\n\n")
+            else:
+                try:
                     pid.clear() # clearing pid after changing order
                     encoder1.clear() # same goes for encoders
                     encoder2.clear()
                     pwm1 = STANDARD_PWM1 # setting pwm for both motors after changing order
                     pwm2 = STANDARD_PWM2
-
+                except:
+                    print("\n\nsmthin fcked up \t send_orders \t error: 2.2\n\n")
+            try:
                 if target == 2:
                     motor.turn_right(pwm1,pwm2)
                 if target == 3:
@@ -63,10 +71,10 @@ def start_sending_orders(orders):
                     motor.stop()
                 prev_target = target # changing prev_target only if target affects motors
             except:
-                print("\n\nsmthin fcked up\n\n")
+                print("\n\nsmthin fcked up \t send_orders \t error: 3\n\n")
 
         distance_grove.distance()
-        print('distance: {:3f}' .format(distance_grove.distance_cm))
+        # print('distance: {:3f}' .format(distance_grove.distance_cm))
         if target == 4 and distance_grove.distance_cm < COLLISION_DISTANCE:
             motor.stop()
             target = 10

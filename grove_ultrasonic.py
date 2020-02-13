@@ -98,7 +98,7 @@ class Measurement(object):
         if self.signal_on is not None and self.signal_off is not None:
             signal_duration = self.signal_off - self.signal_on
             self.distance_cm = signal_duration * ((self.speed_of_sound * 100) / 2)
-            print('Distance: {:.1f}cm' .format(self.distance_cm))
+            # print('Distance: {:.1f}cm' .format(self.distance_cm))
         else:
             self.distance_cm = 999
         # lowpass filter version

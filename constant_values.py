@@ -35,8 +35,8 @@ STANDARD_PWM1 = 80
 STANDARD_PWM2 = 80
 
 # range sensor
-TRIG_PIN = 15
-COLLISION_DISTANCE = 15 # actually in send_orders
+TRIG_PIN = 6
+COLLISION_DISTANCE = 15 # actually used in send_orders
 
 # servo
 MAX_PWM = 9
@@ -44,3 +44,18 @@ MIN_PWM = 3
 FREQ = 50
 SINGLE_POS_CHANGE = 10
 SERVO_PIN = 4
+
+
+# encoders
+ENCODER1_PIN = 23
+ENCODER2_PIN = 17
+
+NUM_OF_SAMPLES = 60
+WINDOW_LENGTH = 0.1 #(seconds)
+TRANSMISSION_FACTOR =1/34 # = 1/36;
+
+# PID
+
+MAX_PWM = 100 # percentage
+SAMPLE_TIME = WINDOW_LENGTH # seconds so encoders and PID have same sample rate
+# MAX_MOTOR_SPEED = 300

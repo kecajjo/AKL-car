@@ -14,19 +14,19 @@ class motors_movement():
     
     def move_forth(self,pwm1=STANDARD_PWM1, pwm2=STANDARD_PWM2):
         self.left_motor.forward(pwm1)
-        self.right_motor.forward(pwm2)
+        self.right_motor.backward(pwm2)
 
     def move_back(self,pwm1=STANDARD_PWM1, pwm2=STANDARD_PWM2):
         self.left_motor.backward(pwm1)
-        self.right_motor.backward(pwm2)
+        self.right_motor.forward(pwm2)
 
     def turn_left(self,pwm1=STANDARD_PWM1, pwm2=STANDARD_PWM2):
         self.left_motor.backward(pwm1)
-        self.right_motor.forward(pwm2)
+        self.right_motor.backward(pwm2)
 
     def turn_right(self,pwm1=STANDARD_PWM1, pwm2=STANDARD_PWM2):
         self.left_motor.forward(pwm1)
-        self.right_motor.backward(pwm2)
+        self.right_motor.forward(pwm2)
 
     def stop(self):
         self.left_motor.stop()

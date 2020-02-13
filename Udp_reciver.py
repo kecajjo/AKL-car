@@ -1,7 +1,7 @@
 import socket
 import constant_values
 
-TCP_IP = '192.168.8.102'
+TCP_IP = '192.168.8.101'
 TCP_PORT = constant_values.port
 BUFFER_SIZE = 8  # Normally 1024, but I want fast response
 
