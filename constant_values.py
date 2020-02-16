@@ -16,6 +16,8 @@ camer_on = 8
 camera_of = 9
 
 
+SET_SPEED = 2.3
+
 # replies for master
 master = 100
 
@@ -51,11 +53,14 @@ ENCODER1_PIN = 23
 ENCODER2_PIN = 17
 
 NUM_OF_SAMPLES = 60
-WINDOW_LENGTH = 0.1 #(seconds)
+WINDOW_LENGTH = 0.7 #(seconds)
 TRANSMISSION_FACTOR =1/34 # = 1/36;
 
 # PID
 
 MAX_PWM = 100 # percentage
 SAMPLE_TIME = WINDOW_LENGTH # seconds so encoders and PID have same sample rate
+PROP = 1
+INTEG = 0.0001
+DERIV = 0.0001
 # MAX_MOTOR_SPEED = 300

@@ -29,6 +29,7 @@
 More information about PID Controller: http://en.wikipedia.org/wiki/PID_controller
 """
 import time
+from constant_values import *
 
 
 class PID:
@@ -129,11 +130,13 @@ class PID:
         """
         self.sample_time = sample_time
 
-    def count_motor_pwm(self, speed1, speed2):
-        self.SetPoint = speed1
-        feedback_value = speed2
+    def count_motor_pwm(self, set_point, speed, pwm):
+        self.SetPoint = set_point
+        feedback_value = speed
         self.update(feedback_value)
-        pwm = (feedback_value+self.output)*MAX_PWM/(2*speed1) # assuming 2*speed1 is max speed possible
+        pwm = (pwm+self.output) # a nie current pwm zamiast feedback value?
         if pwm > 100:
             pwm = 100
+        elif pwm < 0:
+            pwm = 0
         return pwm

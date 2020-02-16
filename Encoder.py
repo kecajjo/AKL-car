@@ -31,7 +31,7 @@ class Encoder:
 
     def process_window(self):
        self.add_sample(self.sum * TRANSMISSION_FACTOR)
-       self.speed = self.sum/TRANSMISSION_FACTOR/WINDOW_LENGTH
+       self.speed = self.sum*TRANSMISSION_FACTOR/WINDOW_LENGTH
        # print(speed)
        self.sum = 0.0
        
