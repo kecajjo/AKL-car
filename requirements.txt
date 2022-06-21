@@ -9,7 +9,7 @@ matplotlib==3.0.3
 mccabe==0.6.1
 mypy==0.740
 mypy-extensions==0.4.3
-numpy==1.18.1
+numpy==1.22.0
 pid==2.2.5
 pycodestyle==2.5.0
 PyCRC==1.21
