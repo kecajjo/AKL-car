@@ -16,7 +16,7 @@ PyCRC==1.21
 pydocstyle==4.0.1
 pyflakes==2.1.1
 pylama==7.7.1
-pylint==2.4.4
+pylint==4.0.9
 pynput==1.4.5
 pyparsing==2.4.6
 python-dateutil==2.8.1
